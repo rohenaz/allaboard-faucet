@@ -1,0 +1,391 @@
+<html>
+    <head>
+    <title>Bitcoin SV Faucet</title>
+    <meta name="viewport" content="width=device-width">
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@wildsatchmo" />
+    <meta name="twitter:title" content="Bitoin Faucet" />
+    <meta name="twitter:description" content="An On-Chain Bitcoin Faucet" />
+    <meta name="twitter:image" content="https://faucet.allaboard.cash/screen.png" />
+    <meta property="og:url" content="https://faucet.allaboard.cash" />
+    <meta property="og:type"   content="website" />
+    <meta property="og:title" content="Bitcoin Faucet" />
+    <meta property="og:description" content="An On-Chain Bitcoin Faucet" />
+    <meta property="og:image" content="https://faucet.allaboard.cash/screen.png" />
+  
+    <style type="text/css">
+       * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        a {
+            color: #0077be;
+            text-decoration: none;
+            transition: color .5s;
+        }
+        a:hover {
+            color: #FFF;
+        }
+        body {
+            background-color: #000;
+            color: #FFF;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            font-family: Tahoma, Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            display: flex;
+            align-items: center;
+            font-family: 'Ubuntu', sans-serif;
+            justify-content: center;
+            user-select: none;
+        }
+        i {
+            animation-duration: 1s;
+            animation-fill-mode: both;
+        }
+        .fa-heart {
+            animation-name: pulse;
+            animation-iteration-count: infinite;
+            color: red;
+        }
+        .fa-external-link {
+            color: #666;
+        }
+        svg { 
+            margin-right: .5rem;
+        }
+        video {
+            opacity: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 6s;
+        }
+        .bsv-icon {
+            width: 2.5rem
+        }
+        .centerme {
+            border-radius: .5rem;
+            background-color: rgba(0,0,0,.8);
+            opacity: 0;
+            padding: 1rem;
+            margin: auto;
+            max-width: 450px;
+            z-index: 1;
+            transition: opacity 2s;
+        }
+        .centerme > div:first-of-type {
+            color: #666;
+            font-size: .7rem;
+        }
+        .centerme > div:last-of-type {
+            color: #666;
+            font-size: .5rem;
+        }
+        .love {
+            padding: 1rem;
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            text-align: left;
+            color: #666;
+            font-family: 'Ubuntu';
+        }
+        .refill-btn {
+            cursor: pointer;
+            transition: color 1s;
+            color: #0077be;
+        }
+        .refill-btn:hover {
+            color: #FFF;
+        }
+        #nextAddress {
+            font-size: .3rem;
+        }
+        .refill-container {
+            display: none;
+        }
+        .qr img {
+            margin: .5rem;
+            opacity: 0;
+            transition: opacity .25s;
+        }
+        #mb {
+            height: 50px;
+        }
+        input, button {
+            color: #fff;
+            margin-bottom: 1rem;
+            border-radius: .5rem;
+            font-size: 1rem;
+            padding: .75rem;
+        }
+        input {
+            background-color: rgba(0,0,0,.7);
+            border: 1px solid rgba(0,0,0,.7);
+            outline: none;
+            text-align: center;
+            width: 300px;
+        }
+        input:focus {
+            border: 1px solid #0077be;
+        }
+        button {
+            border: 0;
+            cursor: pointer;
+            background-color: #4c4c4c;
+            width: 300px;
+            transition: all .5s;
+        }
+        button:hover {
+            background-color: #0077be;
+        }
+        .row > div {
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale3d(1, 1, 1)
+            }
+            50% {
+                transform: scale3d(1.05, 1.05, 1.05)
+            }
+            to {
+                transform: scale3d(1, 1, 1)
+            }
+        }
+            
+
+    </style>
+
+    <script>
+        let apiUrl = 'https://api.allaboard.cash'
+        var faucetKey = "teRHI7ikFihd9ZkLLDBhgFrR3cuDpJxb2T"
+        var showRefill = false
+        var ADDR = null
+        const tap = async (address) => {
+            let params = {
+                address : address
+            }
+
+            const res = await fetch(apiUrl + '/faucet/tap', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'key': faucetKey
+                },
+                credentials: 'omit',
+                body: postParams(params)
+            })
+            return await res.json()
+        }
+
+        const postParams = (params) => {
+            if (!params) { return }
+            return Object.keys(params).map((key) => {
+                return encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
+            }).join('&')
+        }
+
+        const updateStatus = async () => {
+            const res = await fetch(apiUrl + '/faucet/status', {
+                method: 'GET',
+                headers: {
+                'Accept': 'application/json',
+                'key': faucetKey
+                },
+                'credentials': 'omit'
+            })
+            json = await res.json()
+            return json
+        }
+
+        const toggleRefill = () => {
+            console.log('Do we have addr?', ADDR)
+            let refillBtnEl = document.querySelector('.refill-btn')
+            let refillContainerEl = document.querySelector('.refill-container')
+            let qrEl = document.querySelector('.qr')
+            if (showRefill) {
+                console.log('hide it')
+                refillBtnEl.style.display = "block"
+                refillContainerEl.style.display = "none"
+            } else {
+                console.log('show it')
+
+                refillBtnEl.style.display = "none"
+                refillContainerEl.style.display = "block"
+                let img = document.createElement('img')
+                img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ADDR}&format=svg&bgcolor=000000&color=FFFFFF`
+                img.onload = () => {
+                    console.log('loaded')
+                    img.style.opacity = '1'
+                }
+                qrEl.appendChild(img)
+
+            }
+            showRefill = !showRefill
+        }
+
+        const setTapped = (txid) => {
+            if (!txid || !txid.length) {
+                return
+            }
+            document.querySelector('input').style.display = 'none'
+            document.querySelector('.balance-container').style.display = 'none'
+            let oldEl = document.querySelector('button')
+            let parent = document.querySelector('.centerme')
+            let link = document.createElement('a')
+            link.href = `https://whatsonchain.com/tx/${txid}`
+            link.target = `_blank`
+            link.innerHTML = `<i class='fa fa-external-link'></i> Tapped<br />`
+            parent.replaceChild(link, oldEl)
+            localStorage.setItem('tapped', txid)
+        }
+
+        const tapCheck = async () => {
+
+            // The query we constructed from step 2.
+            let query = {
+                "v": 3,
+                "q": {
+                    "find": { "tx.h": localStorage.getItem('tapped') },
+                    "project": { "tx": 1 }
+                },
+                "r": {"f": "[ .[] | {tx: .tx.h} ]"}
+            }
+
+            // Bitdb expects a base64 encoded string
+            let b64 = btoa(JSON.stringify(query))
+            let url = "https://chronos.bitdb.network/q/1P6o45vqLdo6X8HRCZk8XuDsniURmXqiXo/" + b64
+
+            // Attach API KEY as header
+            let header = {
+                headers: { key: '12raDWbYT8dc1qsE3SRK87C47hhXYnMAJM' }
+            }
+
+            // Make an HTTP request to bitdb.network public endpoint
+            let r = await fetch(url, header)
+            let json = await r.json()
+            return json.t.length > 0
+        }
+
+        const updateMoneyButton = (address) => {
+            const mbDiv = document.getElementById('mb')
+            moneyButton.render(mbDiv, {
+                outputs: [
+                    {
+                        to: "1372",
+                        amount: ".01",
+                        currency: "USD"
+                    },
+                    {
+                        to: address,
+                        amount: ".10",
+                        currency: "USD"
+                    }
+                ],
+                onPayment: (arg) => {
+                    console.log('payment success', arg)
+                    setTimeout(async () => {
+                        let json = await updateStatus()
+                        updateUI(json)
+                    }, 1000)
+                },
+            })
+        }
+
+        const updateUI = async (json) => {
+            ADDR = json.address
+            document.querySelector('#nextAddress').innerHTML = `<a href="bitcoin:${json.address}?sv">${json.address}</a>`
+
+            updateMoneyButton(json.address)
+            let tappedTx = localStorage.getItem('tapped')
+            if (tappedTx && tappedTx.length === "64") {
+                let tapped = await tapCheck()
+                if (tapped) {
+                    setTapped(tappedTx)
+                }
+                document.querySelector('.centerme').style.opacity = '1'
+                return
+            }
+            document.querySelector('#balance').innerHTML = json.balance
+            document.querySelector('.centerme').style.opacity = '1'
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            // load video
+            let video = document.querySelector('video')
+            video.src = "framefix.m4v"
+            video.oncanplay = () => {
+                video.style.opacity = 1;
+            }
+            video.load()
+            let json = await updateStatus()
+            updateUI(json)
+
+            document.querySelector('button').addEventListener('click', async (e) => {
+                if(!localStorage.getItem('tapped')) {
+                    let tapAddress = document.querySelector('input').value
+                    if (!tapAddress || (tapAddress.length !== 34 || !tapAddress.startsWith('1'))) {
+                        alert('Not a valid Bitcoin address')
+                        return
+                    }
+                    // Tap tap taparoo
+                    let resp = await tap(tapAddress)
+                    if (resp.error) {
+                        alert(resp.error)
+                        return
+                    }
+                    console.log('tapped the rockies', resp)
+                    setTapped(resp.txid)
+                } else {
+                    alert('limit one per customer :)')
+                }
+            })
+        })
+    </script>
+    <script src="https://www.moneybutton.com/moneybutton.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+</head>
+<body>
+    <video autoplay="true" loop="true" muted></video>
+    <div class="centerme">
+        <h1>
+            <svg class="bsv-icon" viewBox="0 0 2000 2000"><defs><style>.cls-1{fill:#eab300;}.cls-2{fill:#fff;}</style></defs><title>bsv-icon-full</title><path class="cls-1" d="M1996.79,918.83c48.64,616.13-461.8,1126.57-1078,1078-484.73-38.23-877.42-431-915.59-915.71C-45.32,464.91,465.1-45.43,1081.19,3.21,1565.87,41.48,1958.52,434.15,1996.79,918.83Z"/><path class="cls-2" d="M1286.59,964.23c59.6-40.89,100.49-86.91,100.49-173.72,0-137.88-137.15-202.56-220.65-210.77-6.79-.74-25.78-1.08-25.78-1.08l.17-131.91-135.8.33.33,131.92-91-.25.24-131.42-138.8.08-.16,130.76c-24.38.58-170.73.42-170.73.42V695.33s37,0,47.6.16c45.85-.08,66.5,28.94,66.5,49.09l.07,7.3v503.46c-.66,17.83-14.92,31.75-30.76,32.58-20.8.92-51.73.24-51.73.24l-26.7,132.35,166.41.16-.09,132.42H914.64l-.24-132.58h91l-.16,132.83h135.63l.07-132.08s7.47-.26,10-.26c156.55,0,293-92.7,295.1-242.69C1447.78,1055.42,1342.55,984.37,1286.59,964.23ZM914.31,904.68V704.45c18.57.08,87.07.25,127.94.25,3.86,0,7,.68,10.67.85,55.61,2.7,90.25,24.79,108.84,51.37,12.63,18.07,18.27,37.9,18.27,54.65,0,15.77-4.23,32.09-7,39.94a101.38,101.38,0,0,1-17,30.86c-9.62,11.79-15.15,15.74-21.21,20-20.76,14.57-49.86,26-91.77,28-.55,0-126.73.33-128.72.24ZM1220.7,1202a109.47,109.47,0,0,1-18.43,33.34c-10.39,12.73-16.37,17-22.91,21.6-22.44,15.75-53.89,28.12-99.17,30.3-.6,0-163.73.36-165.88.26V1043c20.07.09,120.86.27,165,.27,4.17,0,7.55.73,11.52.92,60.11,2.92,97.54,26.79,117.63,55.52,13.64,19.52,19.75,41,19.75,59.06C1228.24,1175.82,1223.67,1193.47,1220.7,1202Z"/></svg>
+            Bitcoin Faucet
+        </h1>
+        <input type="text" placeholder="Enter BSV Address" id="tapAddress" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+
+        <button>Tap Faucet</button>
+        
+        <div class="row balance-container">Balance: <div id="balance">0</div> Satoshis</div>
+        <br />
+        <div class="row">Powered by <a href="https://allaboard.cash">AllAboard</a></div>
+    </div>
+
+    <div class="love">
+        <div class="refill-btn" onclick="toggleRefill()"><i class="fa fa-heart"></i> Refill</div>
+        <div class="refill-container">
+            <div class="row qr"></div>
+            <br />
+            <div class="row">
+                <div id="nextAddress">fetching faucet info...</div>
+            </div><br />
+            <br />
+            <div id="mb"></div>
+        </div>
+    </div>
+</body>
+</html>
