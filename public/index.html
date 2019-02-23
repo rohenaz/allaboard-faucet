@@ -168,8 +168,7 @@
     </style>
 
     <script>
-        let apiUrl = 'https://api.allaboard.cash'
-        var faucetKey = "teRHI7ikFihd9ZkLLDBhgFrR3cuDpJxb2T"
+        let apiUrl = 'https://us-central1-faucet-6dcc5.cloudfunctions.net'
         var showRefill = false
         var ADDR = null
         const tap = async (address) => {
@@ -177,12 +176,11 @@
                 address : address
             }
 
-            const res = await fetch(apiUrl + '/faucet/tap', {
+            const res = await fetch(apiUrl + '/tap', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'key': faucetKey
                 },
                 credentials: 'omit',
                 body: postParams(params)
@@ -198,11 +196,10 @@
         }
 
         const updateStatus = async () => {
-            const res = await fetch(apiUrl + '/faucet/status', {
+            const res = await fetch(apiUrl + '/status', {
                 method: 'GET',
                 headers: {
-                'Accept': 'application/json',
-                'key': faucetKey
+                    'Accept': 'application/json'
                 },
                 'credentials': 'omit'
             })
