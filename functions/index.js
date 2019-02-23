@@ -9,7 +9,7 @@ admin.initializeApp();
 
 // Take the text parameter passed to this HTTP endpoint and insert it into the
 // Realtime Database under the path /messages/:pushId/original
-exports.tap = functions.https.onRequest((req, res) => {
+exports.tap = functions.https.onRequest(async (req, res) => {
     let headers = req.headers;
     headers.key = functions.config().allaboard.key;
     req.headers = headers;
@@ -25,7 +25,7 @@ exports.tap = functions.https.onRequest((req, res) => {
 
   // Take the text parameter passed to this HTTP endpoint and insert it into the
 // Realtime Database under the path /messages/:pushId/original
-exports.status = functions.https.onRequest((req, res) => {
+exports.status = functions.https.onRequest(async (req, res) => {
     try {
         let response = await rp({
             method: 'GET',
