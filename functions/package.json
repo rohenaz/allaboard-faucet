@@ -1,0 +1,25 @@
+{
+    "name": "github-to-slack-functions",
+    "description": "Firebase Functions that posts new GitHub commits to a Slack channel.",
+    "dependencies": {
+      "request": "^2.80.0",
+      "request-promise": "^4.1.1",
+      "firebase-functions": "^2.2.0"
+    },
+    "devDependencies": {
+      "eslint": "^4.13.1",
+      "eslint-plugin-promise": "^3.6.0"
+    },
+    "scripts": {
+      "lint": "./node_modules/.bin/eslint --max-warnings=0 .",
+      "serve": "firebase serve --only functions",
+      "shell": "firebase experimental:functions:shell",
+      "start": "npm run shell",
+      "deploy": "firebase deploy --only functions",
+      "logs": "firebase functions:log"
+    },
+    "engines": {
+      "node": "8"
+    },
+    "private": true
+  }
