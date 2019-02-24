@@ -17,4 +17,8 @@ Set environmental variable for the faucet key you received from the `create` end
 
 `firebase functions:config:set allaboard.key="YOUR_FAUCET_KEY"`
 
+`cd /functions`
+
+`npm install`
+
 `firebase deploy`
