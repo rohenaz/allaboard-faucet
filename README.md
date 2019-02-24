@@ -13,4 +13,8 @@ Choose hosting and functions
 
 /functions for functions
 
+Set environmental variable for the faucet key you received from the `create` endpoint
+
+`firebase functions:config:set allaboard.key="YOUR_FAUCET_KEY"`
+
 `firebase deploy`
