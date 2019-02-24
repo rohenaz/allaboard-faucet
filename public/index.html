@@ -31,6 +31,7 @@
             background-color: #000;
             color: #FFF;
             display: flex;
+            height: 100%;
             flex-direction: column;
             margin: 0;
             padding: 0;
@@ -179,7 +180,6 @@
             const res = await fetch(apiUrl + '/tap', {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 credentials: 'omit',
@@ -218,7 +218,6 @@
                 refillContainerEl.style.display = "none"
             } else {
                 console.log('show it')
-
                 refillBtnEl.style.display = "none"
                 refillContainerEl.style.display = "block"
                 let img = document.createElement('img')
@@ -250,8 +249,7 @@
         }
 
         const tapCheck = async () => {
-
-            // The query we constructed from step 2.
+            // Find recent tap tx - Bitquery (mongodb) syntax
             let query = {
                 "v": 3,
                 "q": {
@@ -302,12 +300,13 @@
         }
 
         const updateUI = async (json) => {
+            console.log('update ui')
             ADDR = json.address
             document.querySelector('#nextAddress').innerHTML = `<a href="bitcoin:${json.address}?sv">${json.address}</a>`
 
             updateMoneyButton(json.address)
             let tappedTx = localStorage.getItem('tapped')
-            if (tappedTx && tappedTx.length === "64") {
+            if (tappedTx && tappedTx.length === 64) {
                 let tapped = await tapCheck()
                 if (tapped) {
                     setTapped(tappedTx)
@@ -324,7 +323,7 @@
             let video = document.querySelector('video')
             video.src = "framefix.m4v"
             video.oncanplay = () => {
-                video.style.opacity = 1;
+                video.style.opacity = 1
             }
             video.load()
             let json = await updateStatus()
