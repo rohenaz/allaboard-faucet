@@ -1,8 +1,9 @@
-<html>
-    <head>
-    <title>Bitcoin SV Faucet</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Allaboard - Bitcoin SV Faucet</title>
     <meta name="viewport" content="width=device-width">
-
+    <meta charset="UTF-8">
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:creator" content="@wildsatchmo" />
     <meta name="twitter:title" content="Bitoin Faucet" />
@@ -13,14 +14,13 @@
     <meta property="og:title" content="Bitcoin Faucet" />
     <meta property="og:description" content="An On-Chain Bitcoin Faucet" />
     <meta property="og:image" content="https://faucet.allaboard.cash/screen.png" />
-  
-   <link rel="stylesheet" href="https://faucet.allaboard.cash/style.css"></link>
+    <link rel="stylesheet" href="https://faucet.allaboard.cash/style.css"/>
 
-    <script>
+    <script type="application/javascript">
         let apiUrl = 'https://us-central1-faucet-6dcc5.cloudfunctions.net'
-        var showRefill = false
-        var ADDR = null
-        var audio = new Audio('drop.mp3')
+        let showRefill = false
+        let ADDR = null
+        let audio = new Audio('drop.mp3')
         audio.load()
         const tap = async (address) => {
             let params = {
@@ -186,11 +186,9 @@
                     if (!tapAddress) { return }
                     let handcashRegex = /[\$\#][\S]*[^ .,]/
                     if (handcashRegex.test(tapAddress)) {
-                        console.log('handcash!', tapAddress)
                         // lookup handcash
                         try {
                             let handcash = await axios.get('https://api.handcash.io/api/receivingAddress/' + tapAddress.substr(1))
-                            console.log('got respone', handcash)
                             tapAddress = handcash.data.receivingAddress
                         } catch (e) {
                             alert('Couldn\'t get handcash address')
@@ -207,17 +205,17 @@
                         alert(resp.error)
                         return
                     }
-                    console.log('tapped the rockies', resp)
+                    console.log('you tapped the rockies', resp)
                     audio.play()
                     setTapped(resp.txid)
                 } else {
-                    alert('limit one per customer :)')
+                    alert('Limit one per customer :)')
                 }
             })
         })
     </script>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
 </head>
 <body>
     <video autoplay="true" loop="true" muted></video>
@@ -232,7 +230,7 @@
         
         <div class="row balance-container">Balance: <div id="balance">0</div> Satoshis</div>
         <br />
-        <div class="row">Powered by <a href="https://allaboard.cash">AllAboard</a></div>
+        <div class="row">Powered by <a href="https://allaboard.cash/?af=faucet-demo">AllAboard</a></div>
     </div>
 
     <div class="love">

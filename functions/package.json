@@ -1,6 +1,6 @@
 {
     "name": "faucet-functions",
-    "description": "Firebase Functions to proxy allaboard api with faucet key.",
+    "description": "Firebase Functions to proxy the allaboard api with a faucet key.",
     "dependencies": {
         "request": "^2.80.0",
         "request-promise": "^4.1.1",
