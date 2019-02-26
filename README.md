@@ -18,9 +18,12 @@ Example faucet web application using the [allaboard faucet api](https://allaboar
 #### Using Firebase (fastest)
 Checkout the [quickstart](https://firebase.google.com/docs/hosting/quickstart) for firebase and if you want to run the serverless functions locally checkout the [firebase local emulator](https://firebase.google.com/docs/functions/local-emulator).
 
-1) Install the [firebase cli](https://firebase.google.com/docs/hosting/quickstart#install_the_firebase_cli)
+1) Use your [Google firebase account](https://console.firebase.google.com/) and create a **new project** in firebase
+- Project creation is only available from the [Firebase Console](https://console.firebase.google.com)
 
-2) Login to firebase (opens a web browser to login to Google)
+2) Install the [firebase cli](https://firebase.google.com/docs/hosting/quickstart#install_the_firebase_cli)
+
+3) Login to firebase (opens a web browser to login to Google)
 ```bash
 $ firebase login
 
@@ -32,7 +35,7 @@ $ firebase login
 
 ```
 
-3) Run firebase init from inside your repository directory.
+4) Run firebase init from inside your repository directory.
 ```bash
 $ cd /Users/YourName/projects/my-demo-faucet
 $ firebase init
@@ -40,10 +43,8 @@ $ firebase init
 
 Choose these settings to host a static webpage with serverless Cloud Functions
 ```
-You're about to initialize a Firebase project in this directory:
-
-  /Users/YourName/projects/my-demo-faucet
-
+ * You are initializing in an existing Firebase project directory
+  
 ? Which Firebase CLI features do you want to setup for this folder?
  ◯ Database: Deploy Firebase Realtime Database Rules
  ◯ Firestore: Deploy rules and create indexes for Firestore
@@ -55,28 +56,31 @@ You're about to initialize a Firebase project in this directory:
 
 ? Do you want to use ESLint to catch probable bugs and enforce style? Yes
 
+? File functions/package.json already exists. Overwrite? No
+
+? File functions/.eslintrc.json already exists. Overwrite? No
+
+? File functions/index.js already exists. Overwrite? No
+
 ? Do you want to install dependencies with npm now? Yes
 
 ? What do you want to use as your public directory? public
 
 ? Configure as a single-page app (rewrite all urls to /index.html)? Yes
+
+? File public/index.html already exists. Overwrite? No
 ```
 
-4) Go to [allaboard](https://allaboard.cash) and generate a new [faucet api key](https://allaboard.cash). Store that key securely and treat it as safe as a password.
+5) Go to [allaboard](https://allaboard.cash) and generate a new [faucet api key](https://allaboard.cash). Store that key securely and treat it as safe as a password.
 
-5) Set an environment variable in Cloud Functions for the faucet key
+6) Set an environment variable in Cloud Functions for the faucet key
 ```bash 
 $ firebase functions:config:set allaboard.key="YOUR_FAUCET_KEY"
 ```
 
-6) Install all dependencies
+7) Deploy the code and functions (takes a few minutes the first time)
 ```bash
-$ cd /functions
-$ npm install
-```
-
-7) Deploy the code and functions
-```bash
+$ firebase use Your-Firebase-Project-ID
 $ firebase deploy
 ```
 
