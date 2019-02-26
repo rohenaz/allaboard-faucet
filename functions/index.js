@@ -14,8 +14,9 @@ exports.tap = functions.https.onRequest(async (req, res) => {
         let response = await requestWrap(cors.req, '/tap')
         return cors.res.send(response)
     } catch(error) {
-        console.error(error)
-        return cors.res.status(500).send('Something went wrong while sending to allaboard.')
+        console.log('error tapping')
+        console.error(error.statusCode, error.error)
+        return cors.res.status(error.statusCode).send(error.error)
     }
   })
 
@@ -27,7 +28,7 @@ exports.status = functions.https.onRequest(async (req, res) => {
         return cors.res.send(response)
     } catch(error) {
         console.error(error)
-        return cors.res.status(500).send('Something went wrong while sending to allaboard.')
+        return cors.res.status(error.statusCode).send(error.error)
     }
 })
 
@@ -48,9 +49,10 @@ const handleCors = (req, res) => {
 }
 
 const requestWrap = (req, path) => {
-    console.log('hitting url:', allaboardUrl + path, 'with method:', req.method, 'and body:', req.body, 'form data?', req.formData)
+    console.log('hitting url:', allaboardUrl + path, 'with method:', req.method, 'and body:', req.body, 'form data?', req.formData, 'ip', req.ips[0])
     let headers = {}
     headers.key = functions.config().allaboard.key
+    headers.ip = req.ips[0]
 
     let options = {
         headers: headers,

@@ -1,0 +1,151 @@
+* {
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+ }
+ a {
+     color: #0077be;
+     text-decoration: none;
+     transition: color .5s;
+ }
+ a:hover {
+     color: #FFF;
+ }
+ body {
+     background-color: #000;
+     color: #FFF;
+     display: flex;
+     height: 100%;
+     flex-direction: column;
+     margin: 0;
+     padding: 0;
+     font-family: Tahoma, Arial, Helvetica, sans-serif;
+     text-align: center;
+ }
+ h1 {
+     display: flex;
+     align-items: center;
+     font-family: 'Ubuntu', sans-serif;
+     justify-content: center;
+     user-select: none;
+     margin-top: 0;
+ }
+ i {
+     animation-duration: 1s;
+     animation-fill-mode: both;
+ }
+ .fa-heart {
+     animation-name: pulse;
+     animation-iteration-count: infinite;
+     color: red;
+ }
+ .fa-external-link {
+     color: #666;
+ }
+ svg { 
+     margin-right: .5rem;
+ }
+ video {
+     opacity: 0;
+     position: absolute;
+     left: 0;
+     top: 0;
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     transition: opacity 6s;
+ }
+ .bsv-icon {
+     width: 2.5rem
+ }
+ .centerme {
+     border-radius: .5rem;
+     background-color: rgba(0,0,0,.8);
+     opacity: 0;
+     padding: 3rem;
+     margin: auto;
+     max-width: 450px;
+     z-index: 1;
+     transition: opacity 2s;
+ }
+ .centerme > div:first-of-type {
+     color: #666;
+     font-size: .7rem;
+ }
+ .centerme > div:last-of-type {
+     color: #666;
+     font-size: .8rem;
+ }
+ .love {
+     padding: 1rem;
+     position: absolute;
+     bottom: 1rem;
+     left: 1rem;
+     text-align: left;
+     color: #666;
+     font-family: 'Ubuntu';
+     z-index: 1;
+ }
+ .refill-btn {
+     cursor: pointer;
+     transition: color 1s;
+     color: #0077be;
+ }
+ .refill-btn:hover {
+     color: #FFF;
+ }
+ #nextAddress {
+     font-size: .6rem;
+     padding: 2rem 0;
+ }
+ .refill-container {
+     display: none;
+ }
+ .qr img {
+     margin: .5rem;
+     opacity: 0;
+     transition: opacity .25s;
+ }
+ #mb {
+     height: 50px;
+ }
+ input, button {
+     margin-bottom: 1rem;
+     border-radius: .5rem;
+     font-size: 1rem;
+     padding: .75rem;
+ }
+ input {
+     border: 1px solid rgba(0,0,0,.7);
+     outline: none;
+     text-align: center;
+     width: 300px;
+ }
+ input:focus {
+     border: 1px solid #0077be;
+ }
+ button {
+     color: #fff;
+     border: 0;
+     cursor: pointer;
+     background-color: #4c4c4c;
+     width: 300px;
+     transition: all .5s;
+ }
+ button:hover {
+     background-color: #0077be;
+ }
+ .row > div {
+     display: inline-block;
+ }
+
+ @keyframes pulse {
+     from {
+         transform: scale3d(1, 1, 1)
+     }
+     50% {
+         transform: scale3d(1.05, 1.05, 1.05)
+     }
+     to {
+         transform: scale3d(1, 1, 1)
+     }
+ }
