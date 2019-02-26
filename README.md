@@ -102,13 +102,13 @@ $ curl -X GET https://us-central1-Your-Firebase-Project-ID.cloudfunctions.net/st
 - More information about the allaboard faucet api can be [found here](https://allaboard.cash/docs).
 
 ## Examples
-- View the [live example](https://faucet.allaboard.cash)
+- View the [live faucet demo application](https://faucet.allaboard.cash)
 
 ## Code Standards
 - For the serverless functions we follow the [ESLint rules](https://github.com/rohenaz/allaboard-faucet/blob/master/functions/.eslintrc.json).
 
 ## Usage
-- Use this [demo](https://faucet.allaboard.cash) to create a cloud based faucet webpage in minutes
+- Use this [current demo](https://faucet.allaboard.cash) to create a cloud based web application in minutes
 - Setup your own custom application using the [allaboard api](https://allaboard.cash/docs)
 
 ## Maintainers
