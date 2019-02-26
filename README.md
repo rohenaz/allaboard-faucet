@@ -92,12 +92,10 @@ https://Your-Firebase-Project-ID.firebaseapp.com/
 ```
 
 - Second, test your cloud function to see it returns the desired response:
-```
-curl -X GET \
-  https://us-central1-Your-Firebase-Project-ID.cloudfunctions.net/status \
-  -H 'cache-control: no-cache'
-  
-  {"address":"14U9TLN3u9ncW2YQQJCMThBoB9XNigBDvN","balance":0}
+```bash
+$ curl -X GET https://us-central1-Your-Firebase-Project-ID.cloudfunctions.net/status
+
+{"address":"14U9TLN3u9ncW2YQQJCMThBoB9XNigBDvN","balance":0}
 ```
 
 ## Documentation
