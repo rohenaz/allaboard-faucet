@@ -18,9 +18,14 @@ Example faucet web application using the [allaboard faucet api](https://allaboar
 #### Using Firebase (fastest)
 Checkout the [quickstart](https://firebase.google.com/docs/hosting/quickstart) for firebase and if you want to run the serverless functions locally checkout the [firebase local emulator](https://firebase.google.com/docs/functions/local-emulator).
 
-1) Install the [firebase cli](https://firebase.google.com/docs/hosting/quickstart#install_the_firebase_cli)
+1) Use your [Google firebase account](https://console.firebase.google.com/) and create a **new project** in firebase
+- Project creation is only available from the [Firebase Console](https://console.firebase.google.com)
 
-2) Login to firebase (opens a web browser to login to Google)
+2) Turn on the Blaze plan, "Pay as You Go" in the billing section (required to make external cloud function requests)
+
+3) Install the [firebase cli](https://firebase.google.com/docs/hosting/quickstart#install_the_firebase_cli)
+
+4) Login to firebase (opens a web browser to login to Google)
 ```bash
 $ firebase login
 
@@ -32,7 +37,7 @@ $ firebase login
 
 ```
 
-3) Run firebase init from inside your repository directory.
+5) Run firebase init from inside your repository directory.
 ```bash
 $ cd /Users/YourName/projects/my-demo-faucet
 $ firebase init
@@ -40,10 +45,8 @@ $ firebase init
 
 Choose these settings to host a static webpage with serverless Cloud Functions
 ```
-You're about to initialize a Firebase project in this directory:
-
-  /Users/YourName/projects/my-demo-faucet
-
+ * You are initializing in an existing Firebase project directory
+  
 ? Which Firebase CLI features do you want to setup for this folder?
  ◯ Database: Deploy Firebase Realtime Database Rules
  ◯ Firestore: Deploy rules and create indexes for Firestore
@@ -55,42 +58,57 @@ You're about to initialize a Firebase project in this directory:
 
 ? Do you want to use ESLint to catch probable bugs and enforce style? Yes
 
+? File functions/package.json already exists. Overwrite? No
+
+? File functions/.eslintrc.json already exists. Overwrite? No
+
+? File functions/index.js already exists. Overwrite? No
+
 ? Do you want to install dependencies with npm now? Yes
 
 ? What do you want to use as your public directory? public
 
 ? Configure as a single-page app (rewrite all urls to /index.html)? Yes
+
+? File public/index.html already exists. Overwrite? No
 ```
 
-4) Go to [allaboard](https://allaboard.cash) and generate a new [faucet api key](https://allaboard.cash). Store that key securely and treat it as safe as a password.
+6) Go to [allaboard](https://allaboard.cash) and generate a new [faucet api key](https://allaboard.cash). Store that key securely and treat it as safe as a password.
 
-5) Set an environment variable in Cloud Functions for the faucet key
+7) Set an environment variable in Cloud Functions for the faucet key
 ```bash 
 $ firebase functions:config:set allaboard.key="YOUR_FAUCET_KEY"
 ```
 
-6) Install all dependencies
+8) Deploy the code and functions (takes a few minutes the first time)
 ```bash
-$ cd /functions
-$ npm install
+$ firebase use Your-Firebase-Project-ID
+$ firebase deploy
 ```
 
-7) Deploy the code and functions
+- First, test that the website deployed by opening a web browser and entering:
+```
+https://Your-Firebase-Project-ID.firebaseapp.com/
+```
+
+- Second, test your cloud function to see it returns the desired response:
 ```bash
-$ firebase deploy
+$ curl -X GET https://us-central1-Your-Firebase-Project-ID.cloudfunctions.net/status
+
+{"address":"14U9TLN3u9ncW2YQQJCMThBoB9XNigBDvN","balance":0}
 ```
 
 ## Documentation
 - More information about the allaboard faucet api can be [found here](https://allaboard.cash/docs).
 
 ## Examples
-- View the [live example](https://faucet.allaboard.cash)
+- View the [live faucet demo application](https://faucet.allaboard.cash)
 
 ## Code Standards
 - For the serverless functions we follow the [ESLint rules](https://github.com/rohenaz/allaboard-faucet/blob/master/functions/.eslintrc.json).
 
 ## Usage
-- Use this [demo](https://faucet.allaboard.cash) to create a cloud based faucet webpage in minutes
+- Use this [current demo](https://faucet.allaboard.cash) to create a cloud based web application in minutes
 - Setup your own custom application using the [allaboard api](https://allaboard.cash/docs)
 
 ## Maintainers
