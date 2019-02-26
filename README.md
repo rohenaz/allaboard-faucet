@@ -18,41 +18,32 @@ Example faucet web application using the [allaboard faucet api](https://allaboar
 #### Using Firebase (fastest)
 Checkout the [quickstart](https://firebase.google.com/docs/hosting/quickstart) for firebase and if you want to run the serverless functions locally checkout the [firebase local emulator](https://firebase.google.com/docs/functions/local-emulator).
 
-1) Use your [Google firebase account](https://console.firebase.google.com/) and create a **new project** in firebase
-- Project creation is only available from the [Firebase Console](https://console.firebase.google.com)
+1) Use your [Google firebase account](https://console.firebase.google.com/) and **create a new project** in firebase
 
-2) Turn on the Blaze plan, "Pay as You Go" in the billing section (required to make external cloud function requests)
+2) **Turn on the Blaze plan**, aka "Pay as You Go" in the billing section (required to make external cloud function requests)
 
-3) Install the [firebase cli](https://firebase.google.com/docs/hosting/quickstart#install_the_firebase_cli)
+3) **Install the [firebase cli](https://firebase.google.com/docs/hosting/quickstart#install_the_firebase_cli)**
 
-4) Login to firebase (opens a web browser to login to Google)
+4) **Login to firebase** (opens a web browser to login to Google)
 ```bash
 $ firebase login
 
-    ? Allow Firebase to collect anonymous CLI usage and error reporting information? No
-    
-    Waiting for authentication...
-    
-    ✔  Success! Logged in as janedoe@example.com
-
+ ? Allow Firebase to collect anonymous CLI usage and error reporting information? No
 ```
 
-5) Run firebase init from inside your repository directory.
+5) **Run firebase init** from inside your project directory.
 ```bash
 $ cd /Users/YourName/projects/my-demo-faucet
 $ firebase init
 ```
 
-Choose these settings to host a static webpage with serverless Cloud Functions
+Choose these settings to host a static website with serverless Cloud Functions
 ```
  * You are initializing in an existing Firebase project directory
   
 ? Which Firebase CLI features do you want to setup for this folder?
- ◯ Database: Deploy Firebase Realtime Database Rules
- ◯ Firestore: Deploy rules and create indexes for Firestore
- ◉ Functions: Configure and deploy Cloud Functions
-❯◉ Hosting: Configure and deploy Firebase Hosting sites
- ◯ Storage: Deploy Cloud Storage security rules
+❯ ◉ Functions: Configure and deploy Cloud Functions
+❯ ◉ Hosting: Configure and deploy Firebase Hosting sites
  
 ? What language would you like to use to write Cloud Functions? JavaScript
 
@@ -73,20 +64,20 @@ Choose these settings to host a static webpage with serverless Cloud Functions
 ? File public/index.html already exists. Overwrite? No
 ```
 
-6) Go to [allaboard](https://allaboard.cash) and generate a new [faucet api key](https://allaboard.cash). Store that key securely and treat it as safe as a password.
+6) Go to [allaboard](https://allaboard.cash) and **generate a new [faucet api key](https://allaboard.cash)**.
 
-7) Set an environment variable in Cloud Functions for the faucet key
+7) **Set an environment variable** in Cloud Functions for the above faucet api key
 ```bash 
 $ firebase functions:config:set allaboard.key="YOUR_FAUCET_KEY"
 ```
 
-8) Deploy the code and functions (takes a few minutes the first time)
+8) **Deploy the code** and functions (takes a few minutes the first time)
 ```bash
 $ firebase use Your-Firebase-Project-ID
 $ firebase deploy
 ```
 
-- First, test that the website deployed by opening a web browser and entering:
+- First, test that the website deployed by opening a web browser and navigating to:
 ```
 https://Your-Firebase-Project-ID.firebaseapp.com/
 ```
