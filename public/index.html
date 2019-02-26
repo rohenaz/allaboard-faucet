@@ -23,6 +23,8 @@
         var audio = new Audio('drop.mp3')
         audio.load()
         const tap = async (address) => {
+            let btnEl = document.querySelector('button')
+            btnEl.disabled = true
             let params = {
                 address : address
             }
@@ -35,7 +37,9 @@
                 credentials: 'omit',
                 body: postParams(params)
             })
-            return await res.json()
+            let res = await res.json()
+            btnEl.disabled = false
+            return res
         }
 
         const postParams = (params) => {

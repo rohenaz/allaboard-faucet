@@ -131,8 +131,11 @@
      width: 300px;
      transition: all .5s;
  }
- button:hover {
+ button:hover:not(:disabled) {
      background-color: #0077be;
+ }
+ button:disabled {
+     cursor: default;
  }
  .row > div {
      display: inline-block;
