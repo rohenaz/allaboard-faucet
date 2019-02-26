@@ -37,9 +37,9 @@
                 credentials: 'omit',
                 body: postParams(params)
             })
-            let res = await res.json()
+            let json = await res.json()
             btnEl.disabled = false
-            return res
+            return json
         }
 
         const postParams = (params) => {
