@@ -76,7 +76,8 @@ const setTapped = (txid) => {
   let oldEl = document.querySelector('button')
   let parent = document.querySelector('.centerme')
   let link = document.createElement('a')
-  link.href = `https://whatsonchain.com/tx/${txid}`
+  //link.href = `https://whatsonchain.com/tx/${txid}` //Whats On Chain
+  link.href = `https://blockchair.com/bitcoin-sv/transaction/${txid}` //BlockChair
   link.target = `_blank`
   link.innerHTML = `<i class='fa fa-external-link'></i> Tapped<br />`
   parent.replaceChild(link, oldEl)
