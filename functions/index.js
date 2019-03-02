@@ -8,12 +8,12 @@ const rp = require('request-promise')
 const admin = require('firebase-admin')
 admin.initializeApp()
 
-// Allaboard api url endpoint
+// AllAboard api url endpoint
 const apiUrl = 'https://api.allaboard.cash/faucet'
 
 // Name: /tap
 // Method: POST
-// Description: Used to tap the faucet via allaboard
+// Description: Used to tap the faucet via AllAboard
 // Returns: 200 on Success
 exports.tap = functions.https.onRequest(async (req, res) => {
   let cors = handleCors(req, res)
@@ -55,7 +55,7 @@ const handleCors = (req, res) => {
   return {req: req, res: res}
 }
 
-// Standard allaboard API request
+// Standard AllAboard API request
 const apiRequest = (req, path) => {
   console.log('requesting url: ', apiUrl + path, ' method: ', req.method, ' body: ', req.body, ' form data: ', req.formData, ' ip: ', req.ips[0])
 
