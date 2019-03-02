@@ -72,4 +72,4 @@ node_modules/
 .DS_Store
 
 # JetBeans
-/.idea
+.idea
