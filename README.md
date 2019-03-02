@@ -3,7 +3,7 @@ Example faucet web application using the [AllAboard Faucet API](https://allaboar
 
 ![License](https://img.shields.io/github/license/rohenaz/allaboard-faucet.svg?style=flat)  [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat)](https://github.com/RichardLitt/standard-readme)
 
-![Screenshot](https://github.com/rohenaz/allaboard-faucet/blob/master/public/screen.png)
+[![Screenshot](https://github.com/rohenaz/allaboard-faucet/blob/master/public/screen.png)](https://faucet.allaboard.cash)
 
 ## Table of Contents
 - [Installation](https://github.com/rohenaz/allaboard-faucet#installation)
