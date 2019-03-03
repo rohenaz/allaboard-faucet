@@ -1,7 +1,10 @@
 # All Aboard: Faucet [Demo Application](https://faucet.allaboard.cash)
 Example faucet web application using the [AllAboard Faucet API](https://allaboard.cash/docs). This example uses [Firebase](https://firebase.google.com) for the demo [static webpage](https://firebase.google.com/docs/hosting/) and demo serverless [cloud functions](https://firebase.google.com/docs/functions/).
 
-![License](https://img.shields.io/github/license/rohenaz/allaboard-faucet.svg?style=flat)  [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat)](https://github.com/RichardLitt/standard-readme) [![app health](https://img.shields.io/website-up-down-green-red/https/faucet.allaboard.cash.svg?label=status)](https://faucet.allaboard.cash)
+![last commit](https://img.shields.io/github/last-commit/rohenaz/allaboard-faucet.svg)
+![license](https://img.shields.io/github/license/rohenaz/allaboard-faucet.svg?style=flat)
+[![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat)](https://github.com/RichardLitt/standard-readme)
+[![app health](https://img.shields.io/website-up-down-green-red/https/faucet.allaboard.cash.svg?label=status)](https://faucet.allaboard.cash)
 
 [![Screenshot](https://github.com/rohenaz/allaboard-faucet/blob/master/public/screen.png)](https://faucet.allaboard.cash)
 
