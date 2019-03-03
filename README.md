@@ -69,7 +69,7 @@ Choose these settings to host a static website with serverless Cloud Functions
 ? File public/index.html already exists. Overwrite? No
 ```
 
-6) Go to [AllAboard](https://allaboard.cash) and **generate a new [Faucet API key](https://allaboard.cash/docs)**.
+6) Go to [AllAboard](https://allaboard.cash) and **generate a new [Faucet API key](https://allaboard.cash/docs/#/faucet/post_faucet_create)**.
 
 7) **Set an environment variable** in Cloud Functions for the above Faucet API key
 ```bash 
@@ -96,7 +96,7 @@ $ curl -X GET https://us-central1-Your-Firebase-Project-ID.cloudfunctions.net/st
 ```
 
 ## Documentation
-- More information about the AllAboard Faucet API can be [found here](https://allaboard.cash/docs).
+- More information about the [AllAboard Faucet API](https://allaboard.cash/docs).
 
 ## Examples
 - View the [live faucet demo application](https://faucet.allaboard.cash)
