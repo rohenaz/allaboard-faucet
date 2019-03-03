@@ -155,47 +155,43 @@ const updateUI = async (json) => {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // load video
   let video = document.querySelector('video')
   video.src = "framefix.m4v"
   video.oncanplay = () => {
-    video.style.opacity = 1
+      video.style.opacity = 1
   }
   video.load()
   let json = await updateStatus()
   updateUI(json)
 
   document.querySelector('button').addEventListener('click', async (e) => {
-    if(!localStorage.getItem('tapped')) {
+      // Update UI  was already called, so we can assume if the button exists they are untapped
       let tapAddress = document.querySelector('input').value
       // if handcash handle or bitcoin address
       if (!tapAddress) { return }
       let handcashRegex = /[\$\#][\S]*[^ .,]/
       if (handcashRegex.test(tapAddress)) {
-        // lookup handcash
-        try {
-          let handcash = await axios.get('https://api.handcash.io/api/receivingAddress/' + tapAddress.substr(1))
-          tapAddress = handcash.data.receivingAddress
-        } catch (e) {
-          alert('Couldn\'t get handcash address')
-          return
-        }
+          // lookup handcash
+          try {
+              let handcash = await axios.get('https://api.handcash.io/api/receivingAddress/' + tapAddress.substr(1))
+              tapAddress = handcash.data.receivingAddress
+          } catch (e) {
+              alert('Couldn\'t get handcash address')
+              return
+          }
       }
       if  (tapAddress.length !== 34 || !tapAddress.startsWith('1')) {
-        alert('Not a valid Bitcoin address')
-        return
+          alert('Not a valid Bitcoin address')
+          return
       }
       // Tap tap taparoo
       let resp = await tap(tapAddress)
       if (resp.error) {
-        alert(resp.error)
-        return
+          alert(resp.error)
+          return
       }
       console.log('you tapped the rockies', resp)
       audio.play()
       setTapped(resp.txid)
-    } else {
-      alert('Limit one per customer :)')
-    }
   })
 })
