@@ -1,7 +1,12 @@
 # All Aboard: Faucet [Demo Application](https://faucet.allaboard.cash)
-Example faucet web application using the [AllAboard faucet api](https://allaboard.cash/docs). This example uses [Firebase](https://firebase.google.com) for the demo [static webpage](https://firebase.google.com/docs/hosting/) and demo serverless [cloud functions](https://firebase.google.com/docs/functions/).
+Example faucet web application using the [AllAboard Faucet API](https://allaboard.cash/docs). This example uses [Firebase](https://firebase.google.com) for the demo [static webpage](https://firebase.google.com/docs/hosting/) and demo serverless [cloud functions](https://firebase.google.com/docs/functions/).
 
-![License](https://img.shields.io/github/license/rohenaz/allaboard-faucet.svg?style=flat)  [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat)](https://github.com/RichardLitt/standard-readme)
+![last commit](https://img.shields.io/github/last-commit/rohenaz/allaboard-faucet.svg)
+![license](https://img.shields.io/github/license/rohenaz/allaboard-faucet.svg?style=flat)
+[![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat)](https://github.com/RichardLitt/standard-readme)
+[![app health](https://img.shields.io/website-up-down-green-red/https/faucet.allaboard.cash.svg?label=status)](https://faucet.allaboard.cash)
+
+[![Screenshot](https://github.com/rohenaz/allaboard-faucet/blob/master/public/screen.png)](https://faucet.allaboard.cash)
 
 ## Table of Contents
 - [Installation](https://github.com/rohenaz/allaboard-faucet#installation)
@@ -64,9 +69,9 @@ Choose these settings to host a static website with serverless Cloud Functions
 ? File public/index.html already exists. Overwrite? No
 ```
 
-6) Go to [AllAboard](https://allaboard.cash) and **generate a new [faucet api key](https://allaboard.cash)**.
+6) Go to All Aboard and **generate a new [Faucet API key](https://allaboard.cash/docs/#/faucet/post_faucet_create)**.
 
-7) **Set an environment variable** in Cloud Functions for the above faucet api key
+7) **Set an environment variable** in Cloud Functions for the above Faucet API key
 ```bash 
 $ firebase functions:config:set allaboard.key="YOUR_FAUCET_KEY"
 ```
@@ -78,7 +83,6 @@ $ firebase deploy
 ```
 
 #### Testing Firebase Deployment
-
 - First, test that the website deployed by opening a web browser and navigating to the url:
 ```
 https://Your-Firebase-Project-ID.firebaseapp.com/
@@ -92,7 +96,7 @@ $ curl -X GET https://us-central1-Your-Firebase-Project-ID.cloudfunctions.net/st
 ```
 
 ## Documentation
-- More information about the AllAboard faucet api can be [found here](https://allaboard.cash/docs).
+- More information about the [AllAboard Faucet API](https://allaboard.cash/docs).
 
 ## Examples
 - View the [live faucet demo application](https://faucet.allaboard.cash)
@@ -103,10 +107,9 @@ $ curl -X GET https://us-central1-Your-Firebase-Project-ID.cloudfunctions.net/st
 
 ## Usage
 - Use this [current demo](https://faucet.allaboard.cash) to create a cloud based web application in minutes
-- Setup your own custom application using the [AllAboard api](https://allaboard.cash/docs)
+- Setup your own custom application using the [AllAboard API](https://allaboard.cash/docs)
 
 ## Maintainers
-
 [Satchmo](https://github.com/rohenaz) - [MrZ](https://github.com/mrz1836)
 
 Support the development of this project and the [AllAboard](https://allaboard.cash) team 🙏
@@ -115,7 +118,6 @@ Support the development of this project and the [AllAboard](https://allaboard.ca
 
 ## Contributing
 Feel free to dive in! [Open an issue](https://github.com/rohenaz/allaboard-faucet/issues/new) or submit PRs.
-
 
 ## License
 ![License](https://img.shields.io/github/license/rohenaz/allaboard-faucet.svg?style=flat)
