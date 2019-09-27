@@ -6,6 +6,7 @@ const rp = require('request-promise')
 
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require('firebase-admin')
+
 admin.initializeApp()
 
 // AllAboard api url endpoint
@@ -16,7 +17,15 @@ const apiUrl = 'https://api.allaboard.cash/faucet'
 // Description: Used to tap the faucet via AllAboard
 // Returns: 200 on Success
 exports.tap = functions.https.onRequest(async (req, res) => {
+
   let cors = handleCors(req, res)
+
+  // comment out this if guard for Maintenance mode
+  if (!validUA(cors.req.headers['user-agent'])) {
+    // Unauthorised. Play alive
+    return cors.res.status(200).send('')
+  }
+  
   try {
     let response = await apiRequest(cors.req, '/tap')
     return cors.res.send(response)
@@ -32,6 +41,13 @@ exports.tap = functions.https.onRequest(async (req, res) => {
 // Returns: 200 on Success, JSON body
 exports.status = functions.https.onRequest(async (req, res) => {
   let cors = handleCors(req, res)
+
+  // comment out this if guard for Maintenance mode
+  if (!validUA(cors.req.headers['user-agent'])) {
+    // Unauthorised. Play alive
+    return cors.res.status(200).send('')
+  }
+
   try {
     let response = await apiRequest(cors.req, '/status')
     return cors.res.send(response)
@@ -57,7 +73,7 @@ const handleCors = (req, res) => {
 
 // Standard AllAboard API request
 const apiRequest = (req, path) => {
-  console.log('requesting url: ', apiUrl + path, ' method: ', req.method, ' body: ', req.body, ' form data: ', req.formData, ' ip: ', req.ips[0])
+  console.log('requesting url: ', apiUrl + path, ' method: ', req.method, ' body: ', req.body, ' form data: ', req.formData, ' ip: ', req.ips[0], 'ua: ', req.headers['user-agent'])
 
   let headers = {}
 
@@ -77,4 +93,17 @@ const apiRequest = (req, path) => {
     options.form = req.body
   }
   return rp(options)
+}
+
+const validUA = (ua) => {
+  let torUAs = [
+    // Check for TOR browser
+    'Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101 Firefox/60.0'
+  ]
+
+  if (torUAs.indexOf(ua) !== -1) {
+    console.warn('UNAUTHORIZED REQUEST')
+    return false    
+  }
+  return true
 }
