@@ -1,8 +1,17 @@
 let apiUrl = 'https://us-central1-faucet-6dcc5.cloudfunctions.net'
 let showRefill = false
 let ADDR = null
+let tapAddress = null
 let audio = new Audio('drop.mp3')
 audio.load()
+
+let FBconfig = {
+  apiKey: "AIzaSyBH3VVsYUAHlQLibXc3DIwfZ5dRGGelyNg",
+  authDomain: "faucet.allaboard.cash",
+  projectId: "faucet-6dcc5",
+}
+firebase.initializeApp(FBconfig)
+
 const tap = async (address) => {
   let btnEl = document.querySelector('button')
   btnEl.disabled = true
@@ -31,6 +40,7 @@ const postParams = (params) => {
 }
 
 const updateStatus = async () => {
+  console.log('updating status')
   const res = await fetch(apiUrl + '/status', {
     method: 'GET',
     headers: {
@@ -43,26 +53,21 @@ const updateStatus = async () => {
 }
 
 const toggleRefill = () => {
-  console.log('Do we have addr?', ADDR)
   let refillBtnEl = document.querySelector('.refill-btn')
   let refillContainerEl = document.querySelector('.refill-container')
   let qrEl = document.querySelector('.qr')
   if (showRefill) {
-    console.log('hide it')
     refillBtnEl.style.display = "block"
     refillContainerEl.style.display = "none"
   } else {
-    console.log('show it')
     refillBtnEl.style.display = "none"
     refillContainerEl.style.display = "block"
     let img = document.createElement('img')
     img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ADDR}&format=svg&bgcolor=000000&color=FFFFFF`
     img.onload = () => {
-      console.log('loaded')
       img.style.opacity = '1'
     }
     qrEl.appendChild(img)
-
   }
   showRefill = !showRefill
 }
@@ -83,6 +88,7 @@ const setTapped = (txid) => {
   parent.replaceChild(link, oldEl)
   localStorage.setItem('tapped', txid)
 }
+
 
 const tapCheck = async () => {
   // Find recent tap tx - Bitquery (mongodb) syntax
@@ -146,52 +152,93 @@ const updateUI = async (json) => {
     let tapped = await tapCheck()
     if (tapped) {
       setTapped(tappedTx)
+      document.querySelector('.centerme').style.opacity = '1'
+      return
     }
-    document.querySelector('.centerme').style.opacity = '1'
-    return
   }
   document.querySelector('#balance').innerHTML = json.balance
   document.querySelector('.centerme').style.opacity = '1'
 }
 
+const captchaVerifiedCallback = async (data) => {
+  console.log('Captcha verified. Tapping with', tapAddress)
+  // checkRecaptcha(data)
+  // Tap tap taparoo
+  let resp = await tap(tapAddress)
+  if (resp.error) {
+      alert(resp.error)
+      document.querySelector('#tap-button').disabled = true
+      return
+  }
+  console.log('you tapped the rockies', resp)
+  audio.play()
+  setTapped(resp.txid)
+}
+
+
+const inIframe = () => {
+  return window.location !== window.parent.location
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
+  // if (!inIframe) {
+
+  // }
   let video = document.querySelector('video')
   video.src = "framefix.m4v"
   video.oncanplay = () => {
-      video.style.opacity = 1
+    video.style.opacity = 1
   }
   video.load()
   let json = await updateStatus()
   updateUI(json)
+  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    'size': 'invisible',
+    'callback': async function(response) {
+      console.log('callback', response)
+      if (response && response.length > 0) {
+        captchaVerifiedCallback(response)
+      } else {
+        // show me failures in the function logs
+        document.querySelector('#tap-button').disabled = true
+        await axios.get(apiUrl + '/recaptcha/?failed=true&ua='+ navigator.userAgent)
+      }
+    }
+  })
 
   document.querySelector('button').addEventListener('click', async (e) => {
-      // Update UI  was already called, so we can assume if the button exists they are untapped
-      let tapAddress = document.querySelector('input').value
-      // if handcash handle or bitcoin address
-      if (!tapAddress) { return }
-      let handcashRegex = /[\$\#][\S]*[^ .,]/
-      if (handcashRegex.test(tapAddress)) {
-          // lookup handcash
-          try {
-              let handcash = await axios.get('https://api.handcash.io/api/receivingAddress/' + tapAddress.substr(1))
-              tapAddress = handcash.data.receivingAddress
-          } catch (e) {
-              alert('Couldn\'t get handcash address')
-              return
-          }
-      }
-      if  (tapAddress.length !== 34 || !tapAddress.startsWith('1')) {
-          alert('Not a valid Bitcoin address')
-          return
-      }
-      // Tap tap taparoo
-      let resp = await tap(tapAddress)
-      if (resp.error) {
-          alert(resp.error)
-          return
-      }
-      console.log('you tapped the rockies', resp)
-      audio.play()
-      setTapped(resp.txid)
+    // Update UI  was already called, so we can assume if the button exists they are untapped
+    tapAddress = document.querySelector('input').value
+    // if handcash handle or bitcoin address
+    if (!tapAddress) { return }
+    let handcashRegex = /[\$\#][\S]*[^ .,]/
+    if (handcashRegex.test(tapAddress)) {
+        // lookup handcash
+        try {
+            let handcash = await axios.get('https://api.handcash.io/api/receivingAddress/' + tapAddress.substr(1))
+            tapAddress = handcash.data.receivingAddress
+        } catch (e) {
+            alert('Couldn\'t get handcash address')
+            return
+        }
+    }
+    if  (tapAddress.length !== 34 || !tapAddress.startsWith('1')) {
+        alert('Not a valid Bitcoin address')
+        return
+    }
+    recaptchaVerifier.verify()
+  })
+
+  var showCreateFaucet = false
+  document.querySelector('#createFaucetBtn').addEventListener('click', async (e) => {
+
+    if (!showCreateFaucet) {
+      console.log('show ')
+      document.querySelector('#createFaucetForm').style.removeClass('hidden')
+    } else {
+      console.log('hide create faucet form')
+      document.querySelector('#createFaucetForm').style.addClass('hidden')
+    }
+
   })
 })
