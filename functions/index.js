@@ -40,7 +40,7 @@ exports.tap = functions.https.onRequest(async (req, res) => {
 
   try {
     console.log('uid', decodedToken, decodedToken.uid)
-    cors.req.decodedToken = decodedToken
+    cors.req.firebase_token = decodedToken
     let response = await apiRequest(cors.req, '/tap')
     return cors.res.send(response)
   } catch (error) {
