@@ -9,6 +9,25 @@
     ],
     "rewrites": [
       {
+        "source": "/tap",
+        "function": "tap"
+      },{
+        "source": "/status",
+        "function": "status"
+      },
+      {
+        "source": "!/js/**",
+        "detination": "/index.html"
+      },
+      {
+        "source": "!/css/**",
+        "detination": "/index.html"
+      },
+      {
+        "source": "!/img/**",
+        "detination": "/index.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

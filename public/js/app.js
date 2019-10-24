@@ -1,8 +1,10 @@
-let apiUrl = 'https://us-central1-faucet-6dcc5.cloudfunctions.net'
+let apiUrl = 'https://faucet.allaboard.cash'
 let showRefill = false
 let ADDR = null
 let tapAddress = null
 let audio = new Audio('drop.mp3')
+let user = null
+let token = null
 audio.load()
 
 let FBconfig = {
@@ -11,32 +13,29 @@ let FBconfig = {
   projectId: "faucet-6dcc5",
 }
 firebase.initializeApp(FBconfig)
-
+  
 const tap = async (address) => {
   let btnEl = document.querySelector('button')
   btnEl.disabled = true
   let params = {
     address : address
   }
-
-  const res = await fetch(apiUrl + '/tap', {
-    method: 'POST',
-    headers: {
+  
+ 
+  try {  
+    token = await firebase.auth().currentUser.getIdToken(true)
+  
+    let headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    credentials: 'omit',
-    body: postParams(params)
-  })
-  let json = await res.json()
-  btnEl.disabled = false
-  return json
-}
+      'Authorization': 'Bearer ' + token
+    }
 
-const postParams = (params) => {
-  if (!params) { return }
-  return Object.keys(params).map((key) => {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
-  }).join('&')
+    let res = await axios.post(apiUrl + '/tap', Qs.stringify(params), {headers})
+    btnEl.disabled = false
+    return res
+  } catch (e) {
+    throw e.response ? e.response.data : e
+  }
 }
 
 const updateStatus = async () => {
@@ -48,8 +47,7 @@ const updateStatus = async () => {
     },
     'credentials': 'omit'
   })
-  json = await res.json()
-  return json
+  return await res.json()
 }
 
 const toggleRefill = () => {
@@ -72,15 +70,16 @@ const toggleRefill = () => {
   showRefill = !showRefill
 }
 
-const setTapped = (txid) => {
-  if (!txid || !txid.length) {
-    return
-  }
+const setTapped = (txid) => {  
+  document.querySelector('#phone-modal').style.display = 'none'
   document.querySelector('input').style.display = 'none'
   document.querySelector('.balance-container').style.display = 'none'
   let oldEl = document.querySelector('button')
   let parent = document.querySelector('.centerme')
   let link = document.createElement('a')
+  if (!txid || !txid.length) {
+    return
+  }
   //link.href = `https://whatsonchain.com/tx/${txid}` //Whats On Chain
   link.href = `https://blockchair.com/bitcoin-sv/transaction/${txid}` //BlockChair
   link.target = `_blank`
@@ -158,67 +157,111 @@ const updateUI = async (json) => {
   }
   document.querySelector('#balance').innerHTML = json.balance
   document.querySelector('.centerme').style.opacity = '1'
+  console.log(document.querySelector('#tap-button').disabled)
+  document.querySelector('#tap-button').disabled = false
 }
 
-const captchaVerifiedCallback = async (data) => {
+const captchaVerifiedCallback = async () => {
   console.log('Captcha verified. Tapping with', tapAddress)
-  // checkRecaptcha(data)
   // Tap tap taparoo
-  let resp = await tap(tapAddress)
-  if (resp.error) {
-      alert(resp.error)
-      document.querySelector('#tap-button').disabled = true
-      return
+  let resp
+  try {
+    resp = await tap(tapAddress)
+    console.log('you tapped the rockies', resp)
+    await audio.play()
+    setTapped(resp.txid)
+    return resp
+  } catch (e) {
+    document.querySelector('#tap-button').disabled = true
+    throw e
   }
-  console.log('you tapped the rockies', resp)
-  audio.play()
-  setTapped(resp.txid)
 }
 
+firebase.auth().onAuthStateChanged((user) => { // this runs on login
+  if (user) { // user is signed in
+    resetReCaptcha()
+    // user.getIdToken(true).then((idToken) => {
+    //   console.log('token refreshed', idToken)
+    //   token = idToken
+    //   // Send token to your backend via HTTPS
+    //   // ...
+    // }).catch(function(error) {
+    //   // Handle error
+    // })
+    // $scope.authData = user;
+    // firebase.database().ref('userLoginEvent').update({'user': user.uid}); // update Firebase database to trigger Cloud Function
+  } // end if user is signed in
+  else { // User is signed out
+    console.log("User signed out. auth state change", user)
+  }
+}); // end onAuthStateChanged
 
 const inIframe = () => {
   return window.location !== window.parent.location
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+const resetReCaptcha = () => {
+  if (typeof grecaptcha !== 'undefined'
+      && typeof window.recaptchaWidgetId !== 'undefined') {
+    grecaptcha.reset(window.recaptchaWidgetId);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  console.log('content loaded')
   // if (!inIframe) {
 
   // }
+
+  // recaptchaVerifier.verify()
+  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    'size': 'invisible',
+    'callback': async (response) => {
+      console.log('callback', response)
+      if (response && response.length > 0) {
+        // g78wrguyvgvgvcaptchaVerifiedCallback(response)
+        console.log('skipping callback', response)
+        return response
+      } else {
+        // show me failures in the function logs
+        document.querySelector('#tap-button').disabled = true
+        // ToDo - send failed captchas
+        // await axios.get(apiUrl + '/recaptcha/?failed=true&ua='+ navigator.userAgent)
+      }
+    }
+  })
+  console.log('try render here', recaptchaVerifier)
+  recaptchaVerifier.render().then(function(widgetId) {
+    console.log('captcha rendered', widgetId)
+    window.recaptchaWidgetId = widgetId
+  }).catch((e) => {
+    console.error('error', e)
+  })
+
   let video = document.querySelector('video')
   video.src = "framefix.m4v"
   video.oncanplay = () => {
     video.style.opacity = 1
   }
   video.load()
-  let json = await updateStatus()
-  updateUI(json)
-  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-    'size': 'invisible',
-    'callback': async function(response) {
-      console.log('callback', response)
-      if (response && response.length > 0) {
-        captchaVerifiedCallback(response)
-      } else {
-        // show me failures in the function logs
-        document.querySelector('#tap-button').disabled = true
-        await axios.get(apiUrl + '/recaptcha/?failed=true&ua='+ navigator.userAgent)
-      }
-    }
+  updateStatus().then((json) => {
+    updateUI(json)
   })
 
-  document.querySelector('button').addEventListener('click', async (e) => {
+  document.querySelector('#tap-button').addEventListener('click', async (e) => {
     // Update UI  was already called, so we can assume if the button exists they are untapped
     tapAddress = document.querySelector('input').value
     // if handcash handle or bitcoin address
     if (!tapAddress) { return }
-    let handcashRegex = /[\$\#][\S]*[^ .,]/
-    if (handcashRegex.test(tapAddress)) {
-        // lookup handcash
+    let bitcoinRegex = /^[1][a-km-zA-HJ-NP-Z1-9]{25,34}$/ // /[\$\#][\S]*[^ .,]/
+    if (!bitcoinRegex.test(tapAddress)) {
+        // lookup via polynym
         try {
-            let handcash = await axios.get('https://api.handcash.io/api/receivingAddress/' + tapAddress.substr(1))
-            tapAddress = handcash.data.receivingAddress
+            let polynym = await axios.get('https://api.polynym.io/getAddress/' + tapAddress)
+            tapAddress = polynym.data.address
+            console.log('tap address is', tapAddress)
         } catch (e) {
-            alert('Couldn\'t get handcash address')
+            alert('Couldn\'t get handle address')
             return
         }
     }
@@ -226,19 +269,65 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert('Not a valid Bitcoin address')
         return
     }
-    recaptchaVerifier.verify()
+    // let phone = prompt('Enter your phone number for verification. Must include +1 or other country code. \nEx. "+1 954 954 9544"', '')
+    
+    document.querySelector('#phone-modal').style.display = 'block'
+    document.querySelector('#phone-submit').addEventListener('click', async (e) => {
+      // check phone number validity
+      var phone = iti.getNumber()
+      if (!iti.isValidNumber() && phone !== '+19999999999') {
+        console.error('Invalid number', phone)
+        return
+      }
+    
+      let appVerifier = window.recaptchaVerifier
+      firebase.auth().signInWithPhoneNumber(phone, appVerifier)
+      .then(async (confirmationResult) => {
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        let code = prompt('Enter the confirmation code', '')
+        if (!code || !code.length) {
+          throw {message: 'Sorry. No code, no BSV.'}
+        }
+       
+        await recaptchaVerifier.verify()
+
+        try {
+          let result = await confirmationResult.confirm(code)
+          // User signed in successfully.
+          user = result.user
+  
+          // Sign in so the firebase function can get the user
+          // var credential = firebase.auth.PhoneAuthProvider.credential(confirmationResult.verificationId, code)
+          // await firebase.auth().signInWithCredential(credential)
+          let resp
+          
+          resp = await captchaVerifiedCallback()
+          console.info('All done', resp)
+        } catch(e) {
+          console.log('resetting captcha')
+          recaptchaVerifier.reset(window.recaptchaWidgetId)
+          throw e
+        }
+        
+      }).catch(e => {
+        // Error; SMS not sent
+        console.error(e)
+        alert(e.error ? e.error : e.message ? e.message : e)
+        document.querySelector('#phone-modal').style.display = 'none'
+      })
+    })
   })
 
-  var showCreateFaucet = false
-  document.querySelector('#createFaucetBtn').addEventListener('click', async (e) => {
+  // var showCreateFaucet = false
+  // document.querySelector('#createFaucetBtn').addEventListener('click', async (e) => {
 
-    if (!showCreateFaucet) {
-      console.log('show ')
-      document.querySelector('#createFaucetForm').style.removeClass('hidden')
-    } else {
-      console.log('hide create faucet form')
-      document.querySelector('#createFaucetForm').style.addClass('hidden')
-    }
+  //   if (!showCreateFaucet) {
+  //     console.log('show ')
+  //     document.querySelector('#createFaucetForm').style.removeClass('hidden')
+  //   } else {
+  //     console.log('hide create faucet form')
+  //     document.querySelector('#createFaucetForm').style.addClass('hidden')
+  //   }
 
-  })
+  // })
 })

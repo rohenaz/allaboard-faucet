@@ -12,6 +12,7 @@ admin.initializeApp()
 // AllAboard api url endpoint
 const apiUrl = 'https://api.allaboard.cash/faucet'
 
+
 // Name: /tap
 // Method: POST
 // Description: Used to tap the faucet via AllAboard
@@ -21,12 +22,25 @@ exports.tap = functions.https.onRequest(async (req, res) => {
   let cors = handleCors(req, res)
 
   // comment out this if guard for Maintenance mode
-  if (!validUA(cors.req.headers['user-agent'])) {
+  if (!cors.req.headers['authorization'] || !cors.req.headers['authorization'].startsWith('Bearer ') || !validUA(cors.req.headers['user-agent'])) {
     // Unauthorised. Play alive
+    console.log('no valid auth header present')
     return cors.res.status(200).send('')
   }
-  
+  console.log('attempt to validate token')
+  let decodedToken
   try {
+    // idToken comes from the client app
+    decodedToken = await admin.auth().verifyIdToken(cors.req.headers['authorization'].split('Bearer ')[1])
+  } catch(error) {
+    // Unauthorised. Play alive
+    console.log('Invalid user token. Play alive')
+    return cors.res.status(200).send('')
+  }
+
+  try {
+    console.log('uid', decodedToken, decodedToken.uid)
+    cors.req.decodedToken = decodedToken
     let response = await apiRequest(cors.req, '/tap')
     return cors.res.send(response)
   } catch (error) {
@@ -59,15 +73,13 @@ exports.status = functions.https.onRequest(async (req, res) => {
 
 // Handle all Cors for OPTION requests and all other requests
 const handleCors = (req, res) => {
-  res.set('Access-Control-Allow-Origin', '*')
   if (req.method === 'OPTIONS') {
-    res.set('Access-Control-Allow-Methods', 'GET,POST')
-    res.set('Access-Control-Allow-Headers', 'Content-Type')
+    res.set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    res.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     res.set('Access-Control-Max-Age', '3600')
     res.status(204).send('')
-  } else {
-    res.set('Access-Control-Allow-Origin', '*')
-  }
+  } 
+  res.set('Access-Control-Allow-Origin', '*')
   return {req: req, res: res}
 }
 

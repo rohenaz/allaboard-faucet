@@ -141,6 +141,26 @@
      display: inline-block;
  }
 
+ #phone-modal {
+   width: 100vw;
+   height: 100vh;
+   position: absolute;
+ }
+
+ .modal-container {
+   padding: 2rem;
+   margin: auto;
+   width: 400px;
+   top: 25%;
+   position: relative;
+   z-index: 10;
+   background-color: #222;
+ }
+
+ .hide {
+   display: none;
+ }
+ 
  @keyframes pulse {
      from {
          transform: scale3d(1, 1, 1)
