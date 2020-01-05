@@ -2,7 +2,7 @@
 Example faucet web application using the [AllAboard Faucet API](https://allaboardbitcoin.com/docs). This example uses [Firebase](https://firebase.google.com) for the demo [static webpage](https://firebase.google.com/docs/hosting/) and demo serverless [cloud functions](https://firebase.google.com/docs/functions/).
 
 ![last commit](https://img.shields.io/github/last-commit/rohenaz/allaboard-faucet.svg)
-![license](https://img.shields.io/github/license/rohenaz/allaboard-faucet.svg?style=flat)
+[![license](https://img.shields.io/badge/license-Open%20BSV-brightgreen.svg?style=flat)](/LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat)](https://github.com/RichardLitt/standard-readme)
 [![app health](https://img.shields.io/website-up-down-green-red/https/faucet.allaboardbitcoin.com.svg?label=status)](https://faucet.allaboardbitcoin.com)
 
@@ -120,4 +120,4 @@ Support the development of this project and the [AllAboard](https://allaboardbit
 Feel free to dive in! [Open an issue](https://github.com/rohenaz/allaboard-faucet/issues/new) or submit PRs.
 
 ## License
-![License](https://img.shields.io/github/license/rohenaz/allaboard-faucet.svg?style=flat)
+[![License](https://img.shields.io/badge/license-Open%20BSV-brightgreen.svg?style=flat)](/LICENSE)

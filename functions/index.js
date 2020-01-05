@@ -62,8 +62,6 @@ exports.mbwebhook = functions.https.onRequest(async (req, res) => {
   // https://faucet.allaboardbitcoin.com/mbwebhook
 })
 
-
-
 // Name: /tap
 // Method: POST
 // Description: Used to tap the faucet via AllAboard
