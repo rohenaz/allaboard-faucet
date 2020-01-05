@@ -1,12 +1,12 @@
-# All Aboard: Faucet [Demo Application](https://faucet.allaboard.cash)
-Example faucet web application using the [AllAboard Faucet API](https://allaboard.cash/docs). This example uses [Firebase](https://firebase.google.com) for the demo [static webpage](https://firebase.google.com/docs/hosting/) and demo serverless [cloud functions](https://firebase.google.com/docs/functions/).
+# All Aboard: Faucet [Demo Application](https://faucet.allaboardbitcoin.com)
+Example faucet web application using the [AllAboard Faucet API](https://allaboardbitcoin.com/docs). This example uses [Firebase](https://firebase.google.com) for the demo [static webpage](https://firebase.google.com/docs/hosting/) and demo serverless [cloud functions](https://firebase.google.com/docs/functions/).
 
 ![last commit](https://img.shields.io/github/last-commit/rohenaz/allaboard-faucet.svg)
 [![license](https://img.shields.io/badge/license-Open%20BSV-brightgreen.svg?style=flat)](/LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat)](https://github.com/RichardLitt/standard-readme)
-[![app health](https://img.shields.io/website-up-down-green-red/https/faucet.allaboard.cash.svg?label=status)](https://faucet.allaboard.cash)
+[![app health](https://img.shields.io/website-up-down-green-red/https/faucet.allaboardbitcoin.com.svg?label=status)](https://faucet.allaboardbitcoin.com)
 
-[![Screenshot](https://github.com/rohenaz/allaboard-faucet/blob/master/public/screen.png)](https://faucet.allaboard.cash)
+[![Screenshot](https://github.com/rohenaz/allaboard-faucet/blob/master/public/screen.png)](https://faucet.allaboardbitcoin.com)
 
 ## Table of Contents
 - [Installation](https://github.com/rohenaz/allaboard-faucet#installation)
@@ -69,7 +69,7 @@ Choose these settings to host a static website with serverless Cloud Functions
 ? File public/index.html already exists. Overwrite? No
 ```
 
-6) Go to All Aboard and **generate a new [Faucet API key](https://allaboard.cash/docs/#/faucet/post_faucet_create)**.
+6) Go to All Aboard and **generate a new [Faucet API key](https://allaboardbitcoin.com/docs/#/faucet/post_faucet_create)**.
 
 7) **Set an environment variable** in Cloud Functions for the above Faucet API key
 ```bash 
@@ -96,25 +96,25 @@ $ curl -X GET https://us-central1-Your-Firebase-Project-ID.cloudfunctions.net/st
 ```
 
 ## Documentation
-- More information about the [AllAboard Faucet API](https://allaboard.cash/docs).
+- More information about the [AllAboard Faucet API](https://allaboardbitcoin.com/docs).
 
 ## Examples
-- View the [live faucet demo application](https://faucet.allaboard.cash)
+- View the [live faucet demo application](https://faucet.allaboardbitcoin.com)
 
 ## Code Standards
 - Always use the language's best practices
 - For the serverless cloud functions we follow the [ESLint rules](https://github.com/rohenaz/allaboard-faucet/blob/master/functions/.eslintrc.json).
 
 ## Usage
-- Use this [current demo](https://faucet.allaboard.cash) to create a cloud based web application in minutes
-- Setup your own custom application using the [AllAboard API](https://allaboard.cash/docs)
+- Use this [current demo](https://faucet.allaboardbitcoin.com) to create a cloud based web application in minutes
+- Setup your own custom application using the [AllAboard API](https://allaboardbitcoin.com/docs)
 
 ## Maintainers
 [Satchmo](https://github.com/rohenaz) - [MrZ](https://github.com/mrz1836)
 
-Support the development of this project and the [AllAboard](https://allaboard.cash) team 🙏
+Support the development of this project and the [AllAboard](https://allaboardbitcoin.com) team 🙏
 
-[![Donate](https://img.shields.io/badge/donate-bitcoin%20SV-brightgreen.svg)](https://allaboard.cash/?af=allaboard-faucet)
+[![Donate](https://img.shields.io/badge/donate-bitcoin%20SV-brightgreen.svg)](https://allaboardbitcoin.com/?af=allaboard-faucet)
 
 ## Contributing
 Feel free to dive in! [Open an issue](https://github.com/rohenaz/allaboard-faucet/issues/new) or submit PRs.
