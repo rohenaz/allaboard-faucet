@@ -2,11 +2,14 @@
     "name": "faucet-functions",
     "description": "Firebase Functions to proxy the AllAboard api with a faucet key.",
     "dependencies": {
-        "request": "^2.88.0",
-        "request-promise": "^4.2.4",
+        "@moneybutton/api-client": "^0.30.0",
+        "cookie-parser": "^1.4.4",
         "firebase-admin": "^8.6.1",
         "firebase-functions": "^3.3.0",
-        "cookie-parser": "^1.4.4"
+        "request": "^2.88.0",
+        "request-promise": "^4.2.4",
+        "tonicpow-js": "^0.0.1",
+        "util": "^0.12.1"
     },
     "devDependencies": {
         "eslint": "^4.13.1",

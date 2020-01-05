@@ -7,10 +7,61 @@ const rp = require('request-promise')
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require('firebase-admin')
 
+const TonicPow = require('tonicpow-js').default
+var tonicpow = new TonicPow({ advertiser_secret_key: functions.config().tonicow.advertiser_secret })
+
 admin.initializeApp()
 
 // AllAboard api url endpoint
-const apiUrl = 'https://api.allaboard.cash/faucet'
+const apiUrl = 'https://api.allaboardbitcoin.com/faucet'
+
+// Name: /mbwebhook
+// Method: GET
+// Description: Webhook triggers when faucet moneybutton is interacted with
+// Returns: 200 on Success
+exports.mbwebhook = functions.https.onRequest(async (req, res) => {
+  // moneybutton sends
+  // { secret, payment }
+  // let cors = handleCors(req, res)
+  console.log('webhook from moneybutton', req.body)
+  // req.body.payment
+  if (req.body.secret === functions.config().moneybutton.webhook_secret) {
+    if(!req.body.payment || !req.body.payment.buttonData) {
+      // Webhook for user without a tncpw_session
+      console.log('no buttonData')
+      return res.status(200).send('')
+    }
+
+    let buttonData = JSON.parse(req.body.payment.buttonData)
+    if (!buttonData.tncpw_session || buttonData.tncpw_session === '' || buttonData.tncpw_session === 'null') {
+      console.log('no tncpw_session')
+      return res.status(200).send('')
+    }
+
+    // Validate amount is exactly $0.11
+    let amount = Number(parseFloat(req.body.payment.amount).toFixed(2))
+    if (amount !== 0.11) {
+      console.log('wrong amount')
+      return res.status(200).send('')
+    }
+
+    let sessionID = buttonData.tncpw_session
+    try {
+      // let response = await apiRequest(cors.req, '/tap')
+      let response = await tonicpow.api.triggerConversion(sessionID, 'donate') 
+      console.log('triggered conversion:', response)
+      return res.status(200).send('')
+    } catch (error) {
+      console.error('error', error)
+      return res.status(error.statusCode).send(error.error)
+    }
+  }
+  // Bad secret
+  return res.status(401).send('')
+
+  // https://faucet.allaboardbitcoin.com/mbwebhook
+})
+
 
 
 // Name: /tap

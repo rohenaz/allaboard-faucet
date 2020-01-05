@@ -14,8 +14,10 @@
       },{
         "source": "/status",
         "function": "status"
-      },
-      {
+      },{
+        "source": "/mbwebhook",
+        "function": "mbwebhook"
+      },{
         "source": "!/js/**",
         "detination": "/index.html"
       },
