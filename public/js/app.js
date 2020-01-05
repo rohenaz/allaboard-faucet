@@ -1,4 +1,4 @@
-let apiUrl = 'https://faucet.allaboard.cash'
+let apiUrl = 'https://faucet.allaboardbitcoin.com'
 let showRefill = false
 let ADDR = null
 let tapAddress = null
@@ -9,7 +9,7 @@ audio.load()
 
 let FBconfig = {
   apiKey: "AIzaSyBH3VVsYUAHlQLibXc3DIwfZ5dRGGelyNg",
-  authDomain: "faucet.allaboard.cash",
+  authDomain: "faucet.allaboardbitcoin.com",
   projectId: "faucet-6dcc5",
 }
 firebase.initializeApp(FBconfig)
@@ -20,7 +20,6 @@ const tap = async (address) => {
   let params = {
     address : address
   }
-  
  
   try {  
     token = await firebase.auth().currentUser.getIdToken(true)
@@ -116,8 +115,10 @@ const tapCheck = async () => {
 }
 
 const updateMoneyButton = (address) => {
+
   const mbDiv = document.getElementById('mb')
-  moneyButton.render(mbDiv, {
+  let options = {
+    clientIdentifier: '7681f38e7e289ac46bbefc36905a27b4',
     outputs: [
       {
         to: "1372",
@@ -137,7 +138,16 @@ const updateMoneyButton = (address) => {
         updateUI(json)
       }, 1000)
     },
-  })
+  }
+
+  // Attach TonicPow session id if it exists
+  const qparams = new URLSearchParams(window.location.search)
+  let session_id = qparams.get("tncpw_session")
+  if (session_id && session_id.length > 0) {
+    options.buttonData = '{"tncpw_session": "'+ session_id +'"}'
+  }
+
+  moneyButton.render(mbDiv, options)
 }
 
 const updateUI = async (json) => {
