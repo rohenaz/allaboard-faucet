@@ -7,14 +7,17 @@
   <meta name="keywords" content="faucet, tap, bitcoin, website, handcash, all aboard">
   <meta name="description" content="Tap the demo bitcoin SV faucet via the All Aboard API">
   <meta name="twitter:card" content="summary_large_image"/>
+]
   <meta name="twitter:creator" content="@allaboardbsv"/>
   <meta name="twitter:title" content="Bitcoin Faucet"/>
-  <meta name="twitter:description" content="An On-Chain Bitcoin Faucet"/>
+  <meta name="twitter:description" content="A Bitcoin Faucet - Sends a small amount of BSV to your Bitcoin address."/>
+
   <meta name="twitter:image" content="https://faucet.allaboardbitcoin.com/screen.png"/>
   <meta property="og:url" content="https://faucet.allaboardbitcoin.com"/>
   <meta property="og:type" content="website"/>
   <meta property="og:title" content="Bitcoin Faucet"/>
-  <meta property="og:description" content="An On-Chain Bitcoin Faucet"/>
+  <meta property="og:description" content="A Bitcoin Faucet - Sends a small amount of BSV to your Bitcoin address."/>
+
   <meta property="og:image" content="https://faucet.allaboardbitcoin.com/screen.png"/>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" href="favicon-animated.ico" type="image/x-icon">
@@ -22,7 +25,11 @@
   <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet"/>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
         integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous"/>
-  <script type="application/javascript" src="js/app.js"></script>
+  <link rel="stylesheet" href="css/intlTelInput.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-functions.js"></script> -->
+  
 </head>
 <body>
 <video autoplay="true" loop="true" muted></video>
@@ -46,19 +53,34 @@
     </svg>
     Bitcoin Faucet
   </h1>
-  <input type="text" placeholder="BSV Address or $handle" id="tapAddress" autocomplete="off" autocorrect="off"
+  <input type="text" placeholder="paymail, 1handle, or BSV Address" id="tapAddress" autocomplete="off" autocorrect="off"
          autocapitalize="off" spellcheck="false"/>
+  <button id="tap-button" disabled="disabled">Tap Faucet</button>
 
-  <button>Tap Faucet</button>
-
-  <div class="row balance-container">Balance:
+  <div class="row balance-container">
+    Balance:
     <div id="balance">0</div>
     Satoshis
   </div>
   <br/>
   <div class="row">Powered by <a href="https://allaboardbitcoin.com/?af=faucet-demo">AllAboard</a></div>
+
+</div>
+<div id="phone-modal" style="display: none;">
+  <div class="modal-container">
+    <p>Verify you're not a bad guy</p>
+    <br />
+    <input id="phone" type="tel"><br />
+    <span id="valid-msg" class="hide">✓ Valid</span>
+    <span id="error-msg" class="hide"></span>
+    <br />
+    <br />
+    <button id="phone-submit" style="cursor:pointer;">Submit</button>
+  </div>
+
 </div>
 
+<div class="recaptcha-container" id="recaptcha-container"></div>
 <div class="love">
   <div class="refill-btn" onclick="toggleRefill()"><i class="fa fa-heart"></i> Refill</div>
   <div class="refill-container">
@@ -72,6 +94,19 @@
   </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.0/qs.min.js" integrity="sha256-IREbso/y8eqFepOtwhyQDzHY2N3rguIuh7auiaq1ePE=" crossorigin="anonymous"></script>
 <script src="https://www.moneybutton.com/moneybutton.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-279710-17"></script>
+<script>
+  window.dataLayer = window.dataLayer || []
+  function gtag(){dataLayer.push(arguments)}
+  gtag('js', new Date())
+
+  gtag('config', 'UA-279710-17')
+</script>
+<script src="js/intlTelInput.min.js"></script>
+<script src="js/phone.js"></script>
+<script type="application/javascript" src="js/app.js"></script>
 </body>
 </html>
