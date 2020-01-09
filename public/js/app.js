@@ -275,7 +275,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return
         }
     }
-    if  (tapAddress.length !== 34 || !tapAddress.startsWith('1')) {
+    if  ((tapAddress.length !== 34 || !tapAddress.startsWith('1')) && tapAddress.indexof('@') === -1) {
         alert('Not a valid Bitcoin address')
         return
     }
@@ -299,6 +299,9 @@ document.addEventListener("DOMContentLoaded", function () {
           throw {message: 'Sorry. No code, no BSV.'}
         }
        
+        let sendCodeBtn = document.getElementById('phone-submit')
+        sendCodeBtn.disabled = true
+
         await recaptchaVerifier.verify()
 
         try {
@@ -312,10 +315,12 @@ document.addEventListener("DOMContentLoaded", function () {
           let resp
           
           resp = await captchaVerifiedCallback()
+          sendCodeBtn.disabled = false
           console.info('All done', resp)
         } catch(e) {
           console.log('resetting captcha')
           recaptchaVerifier.reset(window.recaptchaWidgetId)
+          sendCodeBtn.disabled = true
           throw e
         }
         

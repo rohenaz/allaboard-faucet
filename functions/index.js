@@ -8,7 +8,7 @@ const rp = require('request-promise')
 const admin = require('firebase-admin')
 
 const TonicPow = require('tonicpow-js').default
-var tonicpow = new TonicPow({ advertiser_secret_key: functions.config().tonicow.advertiser_secret })
+var tonicpow = new TonicPow({ advertiser_secret_key: functions.config().tonicpow.advertiser_secret })
 
 admin.initializeApp()
 
